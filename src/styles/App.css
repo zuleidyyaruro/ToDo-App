@@ -1,0 +1,13 @@
+
+.container {
+    width: 45%;
+    margin: auto;
+    height: 400px;
+    background-color: #C9CBFF;
+    overflow: auto;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+}

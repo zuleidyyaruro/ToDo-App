@@ -1,0 +1,33 @@
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 15px;
+    color: #222;
+}
+
+.card p{
+    text-transform: capitalize;
+    font-size: 18px;
+}
+
+.card button {
+    border: none;
+    background-color: #C9CBFF;
+}
+
+.card button:hover {
+    cursor: pointer;
+}
+
+svg {
+    color:#916BBF;
+}
+
+.card-title {
+    display: flex;
+}
+
+.card-title p{
+    padding-left: 10px;
+}
