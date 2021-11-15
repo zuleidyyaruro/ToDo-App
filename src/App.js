@@ -6,6 +6,7 @@ import Form from "./components/Form";
 import Header from "./components/Header";
 import React, { useEffect, useState } from 'react';
 import TodoContainer from "./components/TodoContainer";
+import Error from './components/Error';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
     const [todoComplete, setTodoComplete] = useState([]);
     const [menuButtonClick, setMenuButtonClick] = useState(1);
     const [todoQuery, setTodoQuery] = useState({ title: '' });
+    const [error, setError] = useState(false)
 
     //Peticion con useEffect
     useEffect(() => {
@@ -73,8 +75,13 @@ function App() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setTodoList([todoQuery, ...todoList]);
-        setTodoQuery({ title: '' });
+        if (todoQuery.title !== '') {
+            setTodoList([todoQuery, ...todoList]);
+            setTodoQuery({ title: '' });
+            setError(false);
+        }else{
+            setError(true)
+        }
     }
 
     return (
@@ -96,6 +103,10 @@ function App() {
                     )
                     :
                     null
+            }
+
+            {
+                error ? <Error message={'You Should Write a Message'}/> : null
             }
 
             <TodoContainer
