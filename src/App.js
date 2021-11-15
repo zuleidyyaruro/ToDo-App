@@ -1,9 +1,11 @@
-import Header from "./components/Header";
-import Menu from './components/Menu';
-import React, {useEffect, useState} from 'react';
-import Loader from "./components/Loader";
-import Todo from "./components/Todo";
+
 import './styles/App.css';
+import { v4 as uuidv4 } from 'uuid';
+import Menu from './components/Menu';
+import Form from "./components/Form";
+import Header from "./components/Header";
+import React, { useEffect, useState } from 'react';
+import TodoContainer from "./components/TodoContainer";
 
 function App() {
 
@@ -11,7 +13,8 @@ function App() {
     const [todoList, setTodoList] = useState(null);
     const [todoActive, setTodoActive] = useState([]);
     const [todoComplete, setTodoComplete] = useState([]);
-    const [menuButtonClick, setMenuButtonClick] = useState(1)
+    const [menuButtonClick, setMenuButtonClick] = useState(1);
+    const [todoQuery, setTodoQuery] = useState({title:''});
 
     //Peticion con useEffect
     useEffect(() => {
@@ -29,16 +32,16 @@ function App() {
     }, [])
 
 
-    const hadleChangeCompleteTodo = (id, buttonClick) => {
+    const handleChangeCompleteTodo = (id, buttonClick) => {
         if (buttonClick === 1) {
-            setTodoList(todoList.map(todo => todo.id === id ? {...todo, completed: !todo.completed} : todo));
+            setTodoList(todoList.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
         } else if (buttonClick === 2) {
             setTodoActive(todoActive.filter(todo => todo.id !== id));
-            setTodoList(todoList.map(todo => todo.id === id ? {...todo, completed: !todo.completed} : todo));
+            setTodoList(todoList.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
 
         } else {
             setTodoComplete(todoComplete.filter(todo => todo.id !== id));
-            setTodoList(todoList.map(todo => todo.id === id ? {...todo, completed: !todo.completed} : todo));
+            setTodoList(todoList.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
         }
     }
 
@@ -56,64 +59,44 @@ function App() {
 
     const handleAll = () => {
         setMenuButtonClick(1);
+        setTodoList([...todoList])
+    }
+
+    const handleTodoQuery = (e) => {
+        setTodoQuery({
+            completed: false,
+            id: uuidv4(),
+            title: e.target.value,
+            userId: 2
+        });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setTodoList([todoQuery, ...todoList]);
+        setTodoQuery({title:''});
     }
 
     return (
         <div>
-            <Header/>
-            <Menu handleActive={handleActive} handleComplete={handleComplete} handleAll={handleAll}/>
-            <div className="container">
-
-                {
-                    menuButtonClick === 1 ?
-                        (todoList &&
-                        todoList.length > 0 ?
-                            (todoList.map(singleTodo => (
-                                <Todo
-                                    key={singleTodo.id}
-                                    singleTodo={singleTodo}
-                                    handleChangeCompleteTodo={hadleChangeCompleteTodo}
-                                    menuButtonClick={menuButtonClick}
-                                />
-                            )))
-                            :
-                            <Loader/>)
-                        :
-                        (
-                            menuButtonClick === 2 ?
-                                (
-                                    todoActive &&
-                                    todoActive.length > 0 ?
-                                        (todoActive.map(singleTodo => (
-                                            <Todo
-                                                key={singleTodo.id}
-                                                singleTodo={singleTodo}
-                                                handleChangeCompleteTodo={hadleChangeCompleteTodo}
-                                                menuButtonClick={menuButtonClick}
-                                            />
-                                        )))
-                                        :
-                                        <Loader/>
-                                )
-                                :
-                                (
-                                    todoComplete &&
-                                    todoComplete.length > 0 ?
-                                        (todoComplete.map(singleTodo => (
-                                            <Todo
-                                                key={singleTodo.id}
-                                                singleTodo={singleTodo}
-                                                handleChangeCompleteTodo={hadleChangeCompleteTodo}
-                                                menuButtonClick={menuButtonClick}
-                                            />
-                                        )))
-                                        :
-                                        <Loader/>
-                                )
-                        )
-                }
-
-            </div>
+            <Header />
+            <Menu
+                handleActive={handleActive}
+                handleComplete={handleComplete}
+                handleAll={handleAll}
+            />
+            <Form
+                handleTodoQuery={handleTodoQuery}
+                handleSubmit={handleSubmit}
+                todoQuery={todoQuery}
+            />
+            <TodoContainer
+                menuButtonClick={menuButtonClick}
+                todoList={todoList}
+                handleChangeCompleteTodo={handleChangeCompleteTodo}
+                todoActive={todoActive}
+                todoComplete={todoComplete}
+            />
         </div>
     );
 }
