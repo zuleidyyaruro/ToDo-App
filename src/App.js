@@ -14,7 +14,7 @@ function App() {
     const [todoActive, setTodoActive] = useState([]);
     const [todoComplete, setTodoComplete] = useState([]);
     const [menuButtonClick, setMenuButtonClick] = useState(1);
-    const [todoQuery, setTodoQuery] = useState({title:''});
+    const [todoQuery, setTodoQuery] = useState({ title: '' });
 
     //Peticion con useEffect
     useEffect(() => {
@@ -74,7 +74,7 @@ function App() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setTodoList([todoQuery, ...todoList]);
-        setTodoQuery({title:''});
+        setTodoQuery({ title: '' });
     }
 
     return (
@@ -85,11 +85,19 @@ function App() {
                 handleComplete={handleComplete}
                 handleAll={handleAll}
             />
-            <Form
-                handleTodoQuery={handleTodoQuery}
-                handleSubmit={handleSubmit}
-                todoQuery={todoQuery}
-            />
+            {
+                menuButtonClick === 1 ?
+                    (
+                        <Form
+                            handleTodoQuery={handleTodoQuery}
+                            handleSubmit={handleSubmit}
+                            todoQuery={todoQuery}
+                        />
+                    )
+                    :
+                    null
+            }
+
             <TodoContainer
                 menuButtonClick={menuButtonClick}
                 todoList={todoList}
